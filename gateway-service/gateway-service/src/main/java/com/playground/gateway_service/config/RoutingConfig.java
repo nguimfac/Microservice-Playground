@@ -21,21 +21,17 @@ public class RoutingConfig {
                         .path("/api/order/**")
                         .uri("lb://order-service"))
 
-                // Route vers config-server
-                .route("config-server", r -> r
-                        .path("/config-server/**")
-                        .uri("lb://config-server"))
-                // Route vers discoveryserver-service static ressources
-                .route("discovery-service-static", r -> r
-                                .path("/eureka/**")
-                                .uri("lb://discovery-service"))
-
-                // Route vers discoveryserver-service
-                .route("discovery-service", r -> r
+                .route("eureka-web", r -> r
                         .path("/eureka/web")
-                        .filters(f -> f.setPath("/"))
-                        .uri("lb://discovery-service")
-                ).build();
+                        .filters(f -> f.setPath("/"))  // HTML servi depuis /
+                        .uri("http://localhost:8761")
+                )
+                // Route pour fichiers statiques (CSS, JS, images)
+                .route("eureka-static", r -> r
+                        .path("/eureka/**")
+                        .uri("http://localhost:8761")  // pas de setPath
+                )
+                .build();
     }
 
 }
