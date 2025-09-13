@@ -1,8 +1,4 @@
 # CONFIG EUREKA DISCOVERY SERVICE PROPERTIES
-spring:
-  application:
-    name: discovery-service
-
 server:
   port: 8761
 eureka:
