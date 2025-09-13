@@ -30,8 +30,7 @@ public class RoutingConfig {
                 .route("eureka-static", r -> r
                         .path("/eureka/**")
                         .uri("http://localhost:8761")  // pas de setPath
-                )
-                .build();
+                ).build();
     }
 
 }
