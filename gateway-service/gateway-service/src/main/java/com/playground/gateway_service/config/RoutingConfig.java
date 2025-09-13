@@ -23,16 +23,14 @@ public class RoutingConfig {
                 .route("config-server", r -> r
                         .path("/config-server/**")
                         .uri("lb://config-server"))
-
+                // Route vers discoveryserver-service static ressources
+                .route("discovery-service-static", r -> r
+                                .path("/eureka/**")
+                                .uri("lb://discovery-service"))
                 // Route vers discoveryserver-service
                 .route("discovery-service", r -> r
                         .path("/eureka/web")
                         .filters(f -> f.setPath("/"))
-                        .uri("lb://discovery-service")
-                )
-                // Route vers discoveryserver-service static ressources
-                .route("discovery-service-static", r -> r
-                        .path("/eureka/**")
                         .uri("lb://discovery-service")
                 ).build();
     }
