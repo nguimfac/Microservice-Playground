@@ -3,7 +3,9 @@ package com.playground.gateway_service.config;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class RoutingConfig {
 
     @Bean
@@ -27,6 +29,7 @@ public class RoutingConfig {
                 .route("discovery-service-static", r -> r
                                 .path("/eureka/**")
                                 .uri("lb://discovery-service"))
+
                 // Route vers discoveryserver-service
                 .route("discovery-service", r -> r
                         .path("/eureka/web")
