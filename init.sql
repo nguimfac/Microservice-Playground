@@ -10,4 +10,5 @@ GRANT ALL PRIVILEGES ON inventory_db.* TO 'inventory_user'@'%';
 
 -- Appliquer les changements
 FLUSH PRIVILEGES;
-
+-- Vérification (optionnel pour debug)
+SELECT user, host FROM mysql.user WHERE user IN ('order_user', 'inventory_user');
