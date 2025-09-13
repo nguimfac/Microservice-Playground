@@ -1,0 +1,24 @@
+services:
+  # POSTGRESQL DATABASE SERVICE
+  postgres:
+    image: postgres
+    container_name: microservices-playground-postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: payment-db
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - /docker-entrypoint-initdb.d 
+    networks:
+      - microservices-playground-network
+    restart: unless-stopped
+
+networks:
+  microservices-playground-network:
+    driver: bridge
+volumes:
+  postgres_data:
