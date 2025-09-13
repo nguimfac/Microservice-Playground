@@ -4,3 +4,20 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+
+
+# GATEWAY ROUTES MAPPING CONFIG
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+                enabled: true
+                lowerCaseServiceId: true
+            routes:
+              - id: payment
+                uri: lb://PAYMENT
+                predicates:
+                  - Path=/api/payment/**
