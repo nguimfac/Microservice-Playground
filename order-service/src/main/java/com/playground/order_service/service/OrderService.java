@@ -1,8 +1,7 @@
 package com.playground.order_service.service;
 
-import com.playground.exceptions.NoSuchElementFoundException;
 import com.playground.dto.response.InventoryResponse;
-import lombok.RequiredArgsConstructor;
+import com.playground.exceptions.NoSuchElementFoundException;
 import com.playground.order_service.dto.OrderLineItemsDto;
 import com.playground.order_service.dto.OrderRequest;
 import com.playground.order_service.model.Order;
@@ -19,16 +18,20 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;
 
+    public OrderService(OrderRepository orderRepository, WebClient webClient) {
+        this.orderRepository = orderRepository;
+        this.webClient = webClient;
+    }
+
 
     @Transactional
     public String  placeOrder(OrderRequest orderRequest){
-        List<OrderLineItems>  orderLineItems = orderRequest.getOrderLineItemsDtos()
+        List<OrderLineItems>  orderLineItems = orderRequest.orderLineItemsDtos()
                 .stream().map(this::mapToDto)
                 .toList();
 
@@ -58,6 +61,6 @@ public class OrderService {
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto ol) {
-        return new OrderLineItems(ol.getSkuCode(), ol.getPrice() , ol.getQuantity());
+        return new OrderLineItems(ol.skuCode(), ol.price() , ol.quantity());
     }
 }

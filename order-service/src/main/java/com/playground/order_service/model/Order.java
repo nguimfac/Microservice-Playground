@@ -1,17 +1,13 @@
 package com.playground.order_service.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "t_orders")
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +16,34 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderLineItems> orderLineItemsList;
 
-    public Order(String orderNumber ,List<OrderLineItems> orderLineItemsList ) {
+    public Order() {}
+
+    public Order(String orderNumber , List<OrderLineItems> orderLineItemsList ) {
         this.orderNumber = orderNumber;
+        this.orderLineItemsList = orderLineItemsList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public List<OrderLineItems> getOrderLineItemsList() {
+        return orderLineItemsList;
+    }
+
+    public void setOrderLineItemsList(List<OrderLineItems> orderLineItemsList) {
         this.orderLineItemsList = orderLineItemsList;
     }
 }

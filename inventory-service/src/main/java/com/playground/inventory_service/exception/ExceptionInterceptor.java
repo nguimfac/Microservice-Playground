@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionInterceptor {
     @ExceptionHandler(NoSuchElementFoundException.class)
     public final ResponseEntity<?> handleNoSuchElementFoundException(NoSuchElementFoundException ex) {
-        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                .message(ex.getMessage())
-                .code(HttpStatus.BAD_REQUEST.value())
-                .build();
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getMessage(),HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 }
