@@ -22,6 +22,19 @@ public class GlobalExceptionHandler {
     private static final String CODE_MALFORMED_REQUEST = "MALFORMED_REQUEST";
     private static final String CODE_INTERNAL_ERROR = "INTERNAL_ERROR";
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex, HttpServletRequest req) {
+        HttpStatus status = ex.getStatus();
+        ErrorResponse body = ErrorResponse.builder()
+                .timestamp(OffsetDateTime.now())
+                .status(status.value())
+                .error("BUSINESS_ERROR")
+                .message(ex.getMessage())
+                .path(req.getRequestURI())
+                .build();
+        return ResponseEntity.status(status).body(body);
+    }
+
     @ExceptionHandler(UnknownProviderException.class)
     public ResponseEntity<ErrorResponse> handleUnknownProvider(UnknownProviderException ex, HttpServletRequest req) {
         ErrorResponse body = ErrorResponse.builder()
