@@ -20,6 +20,18 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+#CIRCUIT BREAKER CONFIG
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 resilience4j:
   circuitbreaker:
@@ -28,7 +40,7 @@ resilience4j:
         registerHealthIndicator: true              # Activer un indicateur de santé pour Actuator
         event-consumer-buffer-size: 10            # Taille du buffer pour stocker les événements du circuit breaker
         slidingWindowType: COUNT_BASED            # Type de fenêtre pour calculer le taux d’échec (COUNT_BASED = basé sur le nombre d'appels)
-        slidingWindowSize: 5                       # Nombre d'appels à considérer pour calculer le taux d’échec
+        slidingWindowSize: 2                       # Nombre d'appels à considérer pour calculer le taux d’échec
         failureRateThreshold: 50                   # % d’échecs avant d’ouvrir le circuit breaker
         waitDurationInOpenState: 5s                # Durée pendant laquelle le circuit reste ouvert avant de passer à HALF_OPEN
         permittedNumberOfCallsInHalfOpenState: 3  # Nombre d’appels autorisés quand le circuit est HALF_OPEN

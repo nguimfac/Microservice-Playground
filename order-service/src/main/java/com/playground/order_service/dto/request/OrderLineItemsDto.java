@@ -1,4 +1,4 @@
-package com.playground.order_service.dto;
+package com.playground.order_service.dto.request;
 
 import java.math.BigDecimal;
 
