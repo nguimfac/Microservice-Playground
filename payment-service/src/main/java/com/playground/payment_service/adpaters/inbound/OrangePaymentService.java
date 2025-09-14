@@ -37,22 +37,25 @@ public class OrangePaymentService extends PaymentProcessor implements PaymentSer
     protected PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         OrangeMoneyPaymentRequest omReq = (OrangeMoneyPaymentRequest) request;
         OrangeMoneyEntity entity = mapper.toEntity(omReq);
-        return PaymentResponse.builder()
-                .paymentId(entity.getId())
-                .status(entity.getStatus())
-                .message("Orange Money payment initiated")
-                .provider("ORANGE_MONEY")
-                .createdAt(entity.getCreatedAt())
-                .build();
+        return new PaymentResponse(
+            entity.getId(),
+            entity.getStatus(),
+            "Orange Money payment initiated",
+            "ORANGE_MONEY",
+            null,
+            entity.getCreatedAt()
+        );
     }
 
     @Override
     protected PaymentResponse checkPayment(Long paymentId) {
-        return PaymentResponse.builder()
-                .paymentId(paymentId)
-                .status("PENDING")
-                .message("Orange Money check not implemented yet")
-                .provider("ORANGE_MONEY")
-                .build();
+        return new PaymentResponse(
+            paymentId,
+            "PENDING",
+            "Orange Money check not implemented yet",
+            "ORANGE_MONEY",
+            null,
+            null
+        );
     }
 }

@@ -2,12 +2,11 @@ package com.playground.payment_service.infrastructure.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import com.playground.payment_service.application.dto.AbsaPaymentRequest;
 import com.playground.payment_service.domain.models.AbsaPaymentEntity;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface AbsaPaymentMapper {
 
     @Mapping(target = "id", ignore = true)

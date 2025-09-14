@@ -37,22 +37,25 @@ public class AbsaPaymentService extends PaymentProcessor implements PaymentServi
     protected PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         AbsaPaymentRequest absaReq = (AbsaPaymentRequest) request;
         AbsaPaymentEntity entity = mapper.toEntity(absaReq);
-        return PaymentResponse.builder()
-                .paymentId(entity.getId())
-                .status(entity.getStatus())
-                .message("ABSA payment initiated")
-                .provider("ABSA")
-                .createdAt(entity.getCreatedAt())
-                .build();
+        return new PaymentResponse(
+            entity.getId(),
+            entity.getStatus(),
+            "ABSA payment initiated",
+            "ABSA",
+            null,
+            entity.getCreatedAt()
+        );
     }
 
     @Override
     protected PaymentResponse checkPayment(Long paymentId) {
-        return PaymentResponse.builder()
-                .paymentId(paymentId)
-                .status("PENDING")
-                .message("ABSA check not implemented yet")
-                .provider("ABSA")
-                .build();
+        return new PaymentResponse(
+            paymentId,
+            "PENDING",
+            "ABSA check not implemented yet",
+            "ABSA",
+            null,
+            null
+        );
     }
 }

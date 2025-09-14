@@ -27,7 +27,7 @@ public class PaymentController {
 
 	@PostMapping
 	public ResponseEntity<PaymentResponse> pay(@Valid @RequestBody BasePaymentRequest request) {
-		PaymentService service = paymentFactory.getFactory(request.getProvider());
+		PaymentService service = paymentFactory.getFactory(request.provider());
 		return ResponseEntity.ok(service.pay(request));
 	}
 
