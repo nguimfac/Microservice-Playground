@@ -1,4 +1,4 @@
-package com.playground.payment_service.application.mapper;
+package com.playground.payment_service.infrastructure.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

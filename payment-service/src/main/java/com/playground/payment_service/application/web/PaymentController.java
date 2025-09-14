@@ -1,4 +1,4 @@
-package com.playground.payment_service.adpaters.web;
+package com.playground.payment_service.application.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.playground.payment_service.application.dto.BasePaymentRequest;
 import com.playground.payment_service.application.dto.PaymentResponse;
-import com.playground.payment_service.application.strategy.PaymentFactory;
 import com.playground.payment_service.domain.ports.inbound.PaymentService;
+import com.playground.payment_service.infrastructure.factories.PaymentFactory;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

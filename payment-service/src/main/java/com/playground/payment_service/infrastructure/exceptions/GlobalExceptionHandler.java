@@ -1,4 +1,4 @@
-package com.playground.payment_service.adpaters.web;
+package com.playground.payment_service.infrastructure.exceptions;
 
 import java.time.OffsetDateTime;
 
@@ -9,8 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.playground.payment_service.adpaters.web.model.ErrorResponse;
-import com.playground.payment_service.application.exceptions.UnknownProviderException;
+import com.playground.payment_service.infrastructure.exceptions.model.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;

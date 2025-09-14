@@ -1,11 +1,11 @@
-package com.playground.payment_service.application.strategy;
+package com.playground.payment_service.infrastructure.factories;
 
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
-import com.playground.payment_service.application.exceptions.UnknownProviderException;
 
 import com.playground.payment_service.domain.ports.inbound.PaymentService;
+import com.playground.payment_service.infrastructure.exceptions.UnknownProviderException;
 
 import lombok.RequiredArgsConstructor;
 

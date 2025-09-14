@@ -1,4 +1,4 @@
-package com.playground.payment_service.adpaters.web.model;
+package com.playground.payment_service.infrastructure.exceptions.model;
 
 import java.time.OffsetDateTime;
 

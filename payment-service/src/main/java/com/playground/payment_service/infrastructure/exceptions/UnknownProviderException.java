@@ -1,4 +1,4 @@
-package com.playground.payment_service.application.exceptions;
+package com.playground.payment_service.infrastructure.exceptions;
 
 public class UnknownProviderException extends RuntimeException {
     public UnknownProviderException(String provider) {
