@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class AbsaPaymentService extends PaymentProcessor implements PaymentService {
 
     private final AbsaPaymentMapper mapper;
-    // Repository pour persister AbsaPaymentEntity (à injecter si nécessaire)
 
     @Override
     public PaymentResponse pay(BasePaymentRequest request) {
@@ -31,8 +30,6 @@ public class AbsaPaymentService extends PaymentProcessor implements PaymentServi
 
     @Override
     protected String authenticate(BasePaymentRequest request) {
-        // Cast sécurisé attendu car contrôleur route les DTOs par provider
-        // Ici on pourrait appeler un service d'auth ABSA et obtenir un bearer token
         return "absa-token-sample";
     }
 
@@ -40,7 +37,6 @@ public class AbsaPaymentService extends PaymentProcessor implements PaymentServi
     protected PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         AbsaPaymentRequest absaReq = (AbsaPaymentRequest) request;
         AbsaPaymentEntity entity = mapper.toEntity(absaReq);
-        // repository.save(entity); // décommentez si un repository est disponible
         return PaymentResponse.builder()
                 .paymentId(entity.getId())
                 .status(entity.getStatus())
@@ -52,7 +48,6 @@ public class AbsaPaymentService extends PaymentProcessor implements PaymentServi
 
     @Override
     protected PaymentResponse checkPayment(Long paymentId) {
-        // Rechercher en base et/ou interroger le provider si nécessaire
         return PaymentResponse.builder()
                 .paymentId(paymentId)
                 .status("PENDING")

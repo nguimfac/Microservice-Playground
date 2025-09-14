@@ -37,7 +37,6 @@ public class OrangePaymentService extends PaymentProcessor implements PaymentSer
     protected PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         OrangeMoneyPaymentRequest omReq = (OrangeMoneyPaymentRequest) request;
         OrangeMoneyEntity entity = mapper.toEntity(omReq);
-        // repository.save(entity); // décommentez si un repository est disponible
         return PaymentResponse.builder()
                 .paymentId(entity.getId())
                 .status(entity.getStatus())
@@ -49,7 +48,6 @@ public class OrangePaymentService extends PaymentProcessor implements PaymentSer
 
     @Override
     protected PaymentResponse checkPayment(Long paymentId) {
-    // Rechercher en base et/ou interroger le provider si nécessaire
         return PaymentResponse.builder()
                 .paymentId(paymentId)
                 .status("PENDING")
