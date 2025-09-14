@@ -7,6 +7,8 @@ import com.playground.order_service.dto.OrderRequest;
 import com.playground.order_service.model.Order;
 import com.playground.order_service.model.OrderLineItems;
 import com.playground.order_service.repository.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     public OrderService(OrderRepository orderRepository, WebClient webClient) {
         this.orderRepository = orderRepository;
@@ -31,6 +34,7 @@ public class OrderService {
 
     @Transactional
     public String  placeOrder(OrderRequest orderRequest){
+        logger.info("*********** Try to call inventory service ************");
         List<OrderLineItems>  orderLineItems = orderRequest.orderLineItemsDtos()
                 .stream().map(this::mapToDto)
                 .toList();
@@ -55,7 +59,6 @@ public class OrderService {
         if (!allProductsInStock) {
             throw new NoSuchElementFoundException("One of the products is not in stock, please try later");
         }
-
         orderRepository.save(order);
         return "Order Placed Successfully";
     }

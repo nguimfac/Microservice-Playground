@@ -21,19 +21,28 @@ public class OrderController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    @CircuitBreaker(name = "inventory" , fallbackMethod = "fallBackMethod")
-    @TimeLimiter(name = "inventory")
-    @Retry(name = "inventory" ,fallbackMethod = "fallBackMethod")
-    public String placeOrder(@RequestBody OrderRequest orderRequest){
-        return orderService.placeOrder(orderRequest);
+    @CircuitBreaker(name = "inventory", fallbackMethod = "fallBackMethod")
+    @Retry(name = "inventory", fallbackMethod = "fallBackMethod")
+    //@TimeLimiter(name = "inventory", fallbackMethod = "fallBackMethod")
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
+        String result = orderService.placeOrder(orderRequest);
+        return ResponseEntity.ok(result);
     }
 
-    // est appelle l'orsque un appel ne reponds pas positivement
     public ResponseEntity<String> fallBackMethod(OrderRequest orderRequest, Throwable throwable) {
+        String message;
+
+        if (throwable instanceof java.util.concurrent.TimeoutException) {
+            message = "Inventory service is taking too long to respond. Please try again later.";
+        } else if (throwable instanceof RuntimeException) {
+            message = "Inventory service is temporarily unavailable. Our team is working to resolve the issue.";
+        } else {
+            message = "An unexpected error occurred while processing your order. Please retry in a few moments.";
+        }
+
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Oops! Something went wrong. Please try again later.");
+                .body(message);
     }
 
 
