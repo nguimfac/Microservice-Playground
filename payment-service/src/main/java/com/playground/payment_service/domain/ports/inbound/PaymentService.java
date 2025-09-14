@@ -4,7 +4,15 @@ import com.playground.payment_service.application.dto.BasePaymentRequest;
 import com.playground.payment_service.application.dto.PaymentResponse;
 
 public interface PaymentService {
-    PaymentResponse pay(BasePaymentRequest request);
+    
+    String authenticate(BasePaymentRequest request);
 
-    PaymentResponse check(Long paymentId);
+    PaymentResponse processPayment(BasePaymentRequest request, String authToken);
+
+    PaymentResponse checkPayment(Long paymentId);
+
+    default PaymentResponse handlePayment(BasePaymentRequest request) {
+        String authToken = authenticate(request);
+        return processPayment(request, authToken);
+    }
 }

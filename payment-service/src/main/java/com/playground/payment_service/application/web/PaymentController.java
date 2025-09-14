@@ -27,13 +27,13 @@ public class PaymentController {
 
 	@PostMapping
 	public ResponseEntity<PaymentResponse> pay(@Valid @RequestBody BasePaymentRequest request) {
-		PaymentService service = paymentFactory.getFactory(request.provider());
-		return ResponseEntity.ok(service.pay(request));
+		PaymentService service = paymentFactory.getStrategy(request.provider());
+		return ResponseEntity.ok(service.handlePayment(request));
 	}
 
 	@GetMapping("/{provider}/{id}")
 	public ResponseEntity<PaymentResponse> check(@PathVariable String provider, @PathVariable Long id) {
-		PaymentService service = paymentFactory.getFactory(provider);
-		return ResponseEntity.ok(service.check(id));
+		PaymentService service = paymentFactory.getStrategy(provider);
+		return ResponseEntity.ok(service.checkPayment(id));
 	}
 }

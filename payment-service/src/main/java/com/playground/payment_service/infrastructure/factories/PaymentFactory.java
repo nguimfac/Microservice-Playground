@@ -15,7 +15,7 @@ public class PaymentFactory {
 
     private final Map<String, PaymentService> services;
 
-    public PaymentService getFactory(String provider) {
+    public PaymentService getStrategy(String provider) {
         PaymentService svc = services.get(provider);
         if (svc == null) {
             throw new UnknownProviderException(provider);
