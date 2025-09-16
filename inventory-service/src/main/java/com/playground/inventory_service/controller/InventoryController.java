@@ -2,7 +2,7 @@ package com.playground.inventory_service.controller;
 
 import com.playground.dto.response.InventoryResponse;
 import com.playground.inventory_service.service.InventoryService;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public class InventoryController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<InventoryResponse> isInStock(@RequestParam List<String> skuCodes){
-      return inventoryService.isInStock(skuCodes);
+    public ResponseEntity<List<InventoryResponse>> isInStock(@RequestParam List<String> skuCodes){
+      List<InventoryResponse> responses =  inventoryService.isInStock(skuCodes);
+      return ResponseEntity.ok(responses);
     }
 }

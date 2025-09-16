@@ -19,14 +19,15 @@ public class InventoryServiceApplication  {
 	}
 
 	@Bean
-	public CommandLineRunner loadData(InventoryRepository inventoryRepository) throws Exception {
+	public CommandLineRunner loadData(InventoryRepository inventoryRepository) {
       return args -> {
-		  Inventory inventory1 = new Inventory("iphone-12",100);
-		  Inventory inventory2 = new Inventory("iphone-13",100);
-          Inventory inventory3 = new Inventory("iphone-14",100);
-          Inventory inventory4 = new Inventory("iphone-15",100);
-
-          inventoryRepository.saveAll(List.of(inventory1, inventory2,inventory3,inventory4));
+		  List<Inventory> inventories = List.of(
+                  new Inventory("iphone-12",100),
+                  new Inventory("iphone-13",10),
+                  new Inventory("iphone-14",20),
+                  new Inventory("iphone-15",0)
+          );
+          inventoryRepository.saveAll(inventories);
 	  };
 	}
 }

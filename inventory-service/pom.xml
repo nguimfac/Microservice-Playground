@@ -49,7 +49,6 @@
 		<dependency>
 			<groupId>com.common-module.app</groupId>
 			<artifactId>common-module</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
 		<dependency>

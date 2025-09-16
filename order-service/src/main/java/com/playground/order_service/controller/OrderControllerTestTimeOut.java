@@ -1,7 +1,6 @@
 package com.playground.order_service.controller;
 
 import com.playground.order_service.service.OrderService;
-import com.playground.order_service.service.OrderServiceImpl;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

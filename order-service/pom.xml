@@ -50,9 +50,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId></groupId>
+			<groupId>com.common-module.app</groupId>
 			<artifactId>common-module</artifactId>
-		</dependency>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -81,11 +81,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>common-module</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
