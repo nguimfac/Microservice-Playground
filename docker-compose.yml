@@ -17,8 +17,24 @@ services:
       - microservices-playground-network
     restart: unless-stopped
 
+  # MYSQL DATABASE SERVICE
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservices-playground-network
+
 networks:
   microservices-playground-network:
     driver: bridge
+
 volumes:
   postgres_data:
+  mysql_data:

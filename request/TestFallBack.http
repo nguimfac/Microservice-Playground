@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/order/test-cb
+
+
+{
+  "orderLineItemsDtos":[{
+   "skuCode":"IPojosd",
+   "price":100,
+   "quantity":2,
+  }]
+}
