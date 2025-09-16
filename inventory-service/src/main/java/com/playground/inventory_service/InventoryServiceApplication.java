@@ -21,9 +21,12 @@ public class InventoryServiceApplication  {
 	@Bean
 	public CommandLineRunner loadData(InventoryRepository inventoryRepository) throws Exception {
       return args -> {
-		  Inventory inventory1 = new Inventory("iphone-13",100);
-		  Inventory inventory2 = new Inventory("iphone-12",100);
-          inventoryRepository.saveAll(List.of(inventory1, inventory2));
+		  Inventory inventory1 = new Inventory("iphone-12",100);
+		  Inventory inventory2 = new Inventory("iphone-13",100);
+          Inventory inventory3 = new Inventory("iphone-14",100);
+          Inventory inventory4 = new Inventory("iphone-15",100);
+
+          inventoryRepository.saveAll(List.of(inventory1, inventory2,inventory3,inventory4));
 	  };
 	}
 }

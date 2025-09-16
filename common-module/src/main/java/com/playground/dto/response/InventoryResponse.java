@@ -5,8 +5,7 @@ public class InventoryResponse {
     private String skuCode;
     private boolean isInStock;
 
-    public InventoryResponse() {
-    }
+    public InventoryResponse() { }
 
     public InventoryResponse(String skuCode, boolean isInStock) {
         this.skuCode = skuCode;
@@ -24,8 +23,6 @@ public class InventoryResponse {
     public boolean isInStock() {
         return isInStock;
     }
-
-
 
     public void setInStock(boolean inStock) {
         isInStock = inStock;
