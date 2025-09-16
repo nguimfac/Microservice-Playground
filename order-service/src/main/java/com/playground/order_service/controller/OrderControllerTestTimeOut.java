@@ -1,10 +1,15 @@
 package com.playground.order_service.controller;
 
+import com.playground.order_service.dto.request.OrderRequest;
+import com.playground.order_service.dto.response.ApiResponse;
 import com.playground.order_service.service.OrderService;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,22 +27,24 @@ public class OrderControllerTestTimeOut {
         this.orderService = orderService;
     }
 
-    @TimeLimiter(name = "inventory", fallbackMethod = "timeoutFallback")
     @PostMapping
-    public CompletableFuture<String> testTimeout() {
+    @TimeLimiter(name = "inventory")
+    public CompletableFuture<ResponseEntity<?>> placeOrder(@RequestBody OrderRequest orderRequest) {
+        logger.info(">>> Tentative d'appel Inventory");
         return CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(5000); // Simule un service lent (5s)
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-            return "Réponse après délai";
+            orderService.placeOrder(orderRequest);
+            ApiResponse<?> response = new ApiResponse<>(orderRequest, "Order Placed Successfully");
+            return ResponseEntity.ok(response);
         });
     }
 
-    public CompletableFuture<String> timeoutFallback(Throwable t) {
-        return CompletableFuture.completedFuture("Inventory trop lent, timeout dépassé");
+
+    public CompletableFuture<ResponseEntity<?>> cbFallback(OrderRequest orderRequest, Throwable ex) {
+        logger.error(">>> Fallback déclenché : {}", ex.getMessage());
+        ApiResponse<?> response = new ApiResponse<>(orderRequest, "Service Inventory indisponible ou délai dépassé");
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response));
     }
+
 
 
 
