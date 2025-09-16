@@ -7,6 +7,7 @@ import com.playground.payment_service.application.dto.BasePaymentRequest;
 import com.playground.payment_service.application.dto.PaymentResponse;
 import com.playground.payment_service.domain.models.AbsaPaymentEntity;
 import com.playground.payment_service.domain.ports.inbound.PaymentService;
+import com.playground.payment_service.domain.ports.outbound.AbsaPaymentRepository;
 import com.playground.payment_service.infrastructure.mapper.AbsaPaymentMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class AbsaPaymentService implements PaymentService {
 
     private final AbsaPaymentMapper mapper;
+    private final AbsaPaymentRepository repository;
 
     @Override
     public String authenticate(BasePaymentRequest request) {
@@ -25,7 +27,7 @@ public class AbsaPaymentService implements PaymentService {
     @Override
     public PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         AbsaPaymentRequest absaReq = (AbsaPaymentRequest) request;
-        AbsaPaymentEntity entity = mapper.toEntity(absaReq);
+        AbsaPaymentEntity entity = repository.save(mapper.toEntity(absaReq));
         return new PaymentResponse(
             entity.getId(),
             entity.getStatus(),

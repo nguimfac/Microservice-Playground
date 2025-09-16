@@ -7,6 +7,7 @@ import com.playground.payment_service.application.dto.OrangeMoneyPaymentRequest;
 import com.playground.payment_service.application.dto.PaymentResponse;
 import com.playground.payment_service.domain.models.OrangeMoneyEntity;
 import com.playground.payment_service.domain.ports.inbound.PaymentService;
+import com.playground.payment_service.domain.ports.outbound.OrangeMoneyPaymentRepository;
 import com.playground.payment_service.infrastructure.mapper.OrangeMoneyPaymentMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class OrangePaymentService implements PaymentService {
 
     private final OrangeMoneyPaymentMapper mapper;
+    private final OrangeMoneyPaymentRepository repository;
 
     @Override
     public String authenticate(BasePaymentRequest request) {
@@ -25,7 +27,7 @@ public class OrangePaymentService implements PaymentService {
     @Override
     public PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
         OrangeMoneyPaymentRequest omReq = (OrangeMoneyPaymentRequest) request;
-        OrangeMoneyEntity entity = mapper.toEntity(omReq);
+        OrangeMoneyEntity entity = repository.save(mapper.toEntity(omReq));
         return new PaymentResponse(
             entity.getId(),
             entity.getStatus(),
