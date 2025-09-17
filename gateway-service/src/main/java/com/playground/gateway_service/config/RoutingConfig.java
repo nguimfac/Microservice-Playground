@@ -19,6 +19,11 @@ public class RoutingConfig {
                 .route("order-service", r -> r
                         .path("/api/order/**")
                         .uri("lb://order-service"))
+                        
+                // Route vers payment-service
+                .route("payment-service", r -> r
+                        .path("/api/payments/**")
+                        .uri("lb://payment-service"))
 
                 .route("eureka-web", r -> r
                         .path("/eureka/web")

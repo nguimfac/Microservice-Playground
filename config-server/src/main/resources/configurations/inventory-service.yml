@@ -16,7 +16,10 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 
-#CIRCUIT BREAKER CONFIG
+
+  mvc:
+    problemdetails:
+      enabled=true:#CIRCUIT BREAKER CONFIG
 management:
   health:
     circuitbreakers:
@@ -34,3 +37,6 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+
+
+#Enable problem Details

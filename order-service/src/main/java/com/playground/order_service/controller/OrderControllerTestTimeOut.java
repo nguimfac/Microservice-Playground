@@ -21,7 +21,8 @@ import java.util.concurrent.CompletableFuture;
 public class OrderControllerTestTimeOut {
 
     private final OrderService orderService;
-    private static final Logger logger = LoggerFactory.getLogger(OrderControllerTestTimeOut.class);
+
+    private final Logger logger = LoggerFactory.getLogger(OrderControllerTestTimeOut.class);
 
     public OrderControllerTestTimeOut(OrderService orderService) {
         this.orderService = orderService;

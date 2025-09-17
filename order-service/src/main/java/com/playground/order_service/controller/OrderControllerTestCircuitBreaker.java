@@ -31,7 +31,7 @@ public class OrderControllerTestCircuitBreaker {
     @CircuitBreaker(name = "inventory", fallbackMethod = "cbFallback")
     public ResponseEntity<?> placeOrder(@RequestBody OrderRequest orderRequest) {
         logger.info(">>> Tentative d'appel Inventory");
-         orderService.placeOrder(orderRequest);
+        orderService.placeOrder(orderRequest);
         ApiResponse<?> response = new ApiResponse<>(orderRequest, "Order Placed Successfully");
         return ResponseEntity.ok(response);
     }
