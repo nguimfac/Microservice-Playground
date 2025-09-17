@@ -22,10 +22,12 @@ public class OrderServiceImpl  implements OrderService{
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;
+    private final PaymentGatewayService paymentGatewayService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient) {
+    public OrderServiceImpl(OrderRepository orderRepository, WebClient webClient, PaymentGatewayService paymentGatewayService) {
         this.orderRepository = orderRepository;
         this.webClient = webClient;
+        this.paymentGatewayService = paymentGatewayService;
     }
 
 

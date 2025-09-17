@@ -15,6 +15,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
+feign:
+  circuitbreaker:
+    enabled: true
+
+# EUREKA CONFIG
 eureka:
   client:
     register-with-eureka: true
@@ -45,6 +50,16 @@ resilience4j:
         waitDurationInOpenState: 5s                # Durée pendant laquelle le circuit reste ouvert avant de passer à HALF_OPEN
         permittedNumberOfCallsInHalfOpenState: 3  # Nombre d’appels autorisés quand le circuit est HALF_OPEN
         automaticTransitionFromOpenToHalfOpenEnabled: true # Transition automatique du circuit de OPEN à HALF_OPEN
+      payment-service:
+        registerHealthIndicator: true
+        event-consumer-buffer-size: 10 
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
 
   #TIMEOUT
   timelimiter:
@@ -58,3 +73,10 @@ resilience4j:
       inventory:
         maxAttempts: 3
         waitDuration: 20s
+      payment-service:
+        maxAttempts: 3
+        waitDuration: 20s
+
+services:
+  payment-service:
+    base-url: http://localhost:8080
