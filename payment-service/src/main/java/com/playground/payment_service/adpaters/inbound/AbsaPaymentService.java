@@ -40,13 +40,14 @@ public class AbsaPaymentService implements PaymentService {
 
     @Override
     public PaymentResponse checkPayment(Long paymentId) {
+        AbsaPaymentEntity entity = repository.findById(paymentId);
         return new PaymentResponse(
-            paymentId,
-            "PENDING",
-            "ABSA check not implemented yet",
+            entity.getId(),
+            entity.getStatus(),
+            "ABSA payment initiated",
             "ABSA",
             null,
-            null
+            entity.getCreatedAt()
         );
     }
 }

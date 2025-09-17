@@ -1,18 +1,12 @@
 server:
   port: 8080
 
-# GATEWAY ROUTES MAPPING CONFIG
 spring:
-  cloud:
-    gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-                enabled: true
-                lowerCaseServiceId: true
-            routes:
-              - id: payment
-                uri: lb://PAYMENT
-                predicates:
-                  - Path=/api/payment/**
+    cloud:
+        gateway:
+            server:
+                webflux:
+                    discovery:
+                        locator:
+                            enabled: true
+                            lowerCaseServiceId: true
