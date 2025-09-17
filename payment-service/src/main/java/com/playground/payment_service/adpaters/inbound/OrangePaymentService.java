@@ -40,13 +40,14 @@ public class OrangePaymentService implements PaymentService {
 
     @Override
     public PaymentResponse checkPayment(Long paymentId) {
+        OrangeMoneyEntity entity = repository.findById(paymentId);
         return new PaymentResponse(
-            paymentId,
-            "PENDING",
-            "Orange Money check not implemented yet",
+            entity.getId(),
+            entity.getStatus(),
+            "Orange Money payment retrieved",
             "ORANGE_MONEY",
             null,
-            null
+            entity.getCreatedAt()
         );
     }
 }
