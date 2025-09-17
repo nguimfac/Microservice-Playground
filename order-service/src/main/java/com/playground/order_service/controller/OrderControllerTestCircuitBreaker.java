@@ -3,8 +3,7 @@ package com.playground.order_service.controller;
 import com.playground.order_service.dto.request.OrderRequest;
 import com.playground.order_service.dto.response.ApiResponse;
 import com.playground.order_service.service.OrderService;
-import io.github.resilience4j.retry.annotation.Retry;
-import jakarta.validation.Valid;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ public class OrderControllerTestCircuitBreaker {
     }
 
     @PostMapping
-    @Retry(name = "inventory", fallbackMethod = "cbFallback")
+    @CircuitBreaker(name = "inventory", fallbackMethod = "cbFallback")
     public ResponseEntity<?> placeOrder(@RequestBody OrderRequest orderRequest) {
         logger.info(">>> Tentative d'appel Inventory");
          orderService.placeOrder(orderRequest);

@@ -32,7 +32,7 @@ public class OrderServiceImpl  implements OrderService{
     @Transactional
     public Order placeOrder(OrderRequest orderRequest){
         List<OrderLineItems>  orderLineItems = orderRequest.orderLineItemsDtos()
-                .stream().map(this::mapToDto)
+                .stream().map(ol->new OrderLineItems(ol.skuCode(), ol.price() , ol.quantity()))
                 .toList();
 
         Order order = new Order(UUID.randomUUID().toString(), orderLineItems);
@@ -59,7 +59,4 @@ public class OrderServiceImpl  implements OrderService{
 
     }
 
-    private OrderLineItems mapToDto(OrderLineItemsDto ol) {
-        return new OrderLineItems(ol.skuCode(), ol.price() , ol.quantity());
-    }
 }

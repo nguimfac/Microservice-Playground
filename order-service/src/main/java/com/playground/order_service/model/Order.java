@@ -7,7 +7,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "t_orders")
-
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
