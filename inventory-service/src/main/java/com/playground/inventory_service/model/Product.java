@@ -16,9 +16,9 @@ public class Product extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long id;
+    private long id;
     private String productCode;
-    private Integer quantity;
+    private int quantity;
     private BigDecimal price;
     @ManyToOne
     private Category category;

@@ -23,7 +23,6 @@ public abstract class Auditable {
     @LastModifiedDate
     private Date updatedDate;
 
-
     @CreatedBy
     private String createdBy;
 
