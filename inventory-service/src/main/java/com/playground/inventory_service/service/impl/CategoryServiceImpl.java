@@ -1,12 +1,10 @@
 package com.playground.inventory_service.service.impl;
 
 import com.playground.exceptions.NoSuchElementFoundException;
-import com.playground.inventory_service.model.Category;
-import com.playground.inventory_service.repository.CategoryRepository;
+import com.playground.inventory_service.model.category.Category;
+import com.playground.inventory_service.dao.CategoryRepository;
 import com.playground.inventory_service.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {

@@ -1,4 +1,4 @@
-package com.playground.order_service.model;
+package com.playground.order_service.model.order;
 
 import jakarta.persistence.*;
 

@@ -6,7 +6,6 @@ import com.playground.order_service.service.OrderService;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +31,7 @@ public class OrderControllerTestRetry {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<?> retryFallback(RuntimeException e) {
-        ApiResponse<?> response = new ApiResponse<>(e.getMessage(),
-                "Inventory indisponible après tous les retries");
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
 
-    }
 
 
 

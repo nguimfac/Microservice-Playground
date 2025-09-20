@@ -1,12 +1,13 @@
-package com.playground.order_service.service;
+package com.playground.order_service.impl.order;
 
 import com.playground.dto.response.InventoryResponse;
 import com.playground.exceptions.NoSuchElementFoundException;
 import com.playground.order_service.config.properties.PropertiesConfig;
 import com.playground.order_service.dto.request.OrderRequest;
-import com.playground.order_service.model.Order;
-import com.playground.order_service.model.OrderLineItems;
-import com.playground.order_service.repository.OrderRepository;
+import com.playground.order_service.model.order.Order;
+import com.playground.order_service.model.order.OrderLineItems;
+import com.playground.order_service.dao.OrderRepository;
+import com.playground.order_service.service.OrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class OrderServiceImpl  implements OrderService{
+public class OrderServiceImpl  implements OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient webClient;

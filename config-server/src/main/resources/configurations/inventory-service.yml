@@ -15,11 +15,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-
-
+#Enable problem details
   mvc:
     problemdetails:
-      enabled=true:#CIRCUIT BREAKER CONFIG
+      enabled=true:
+
+#CIRCUIT BREAKER CONFIG
 management:
   health:
     circuitbreakers:

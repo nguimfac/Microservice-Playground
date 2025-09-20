@@ -1,5 +1,7 @@
-package com.playground.inventory_service.model;
+package com.playground.inventory_service.model.category;
 
+import com.playground.inventory_service.model.audi.Auditable;
+import com.playground.inventory_service.model.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category extends Auditable{
+public class Category extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

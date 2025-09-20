@@ -4,6 +4,7 @@ import com.playground.order_service.dto.request.OrderRequest;
 import com.playground.order_service.dto.response.ApiResponse;
 import com.playground.order_service.service.OrderService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class OrderControllerTestCircuitBreaker {
     }
 
     @PostMapping
-    @CircuitBreaker(name = "inventory", fallbackMethod = "cbFallback")
+    @CircuitBreaker(name = "inventory", fallbackMethod = "retryFallback")
     public ResponseEntity<?> placeOrder(@RequestBody OrderRequest orderRequest) {
         logger.info(">>> Tentative d'appel Inventory");
         orderService.placeOrder(orderRequest);
@@ -36,9 +37,19 @@ public class OrderControllerTestCircuitBreaker {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping
+    @Retry(name = "inventory", fallbackMethod = "retryFallback")
     public ResponseEntity<?> cbFallback(Throwable t) {
         ApiResponse<?> response = new ApiResponse<>("Circuit ouvert ou erreur Inventory", t.getMessage());
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
+    }
+
+
+    public ResponseEntity<?> retryFallback(RuntimeException e) {
+        ApiResponse<?> response = new ApiResponse<>(e.getMessage(),
+                "Inventory indisponible après tous les retries");
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
+
     }
 
 

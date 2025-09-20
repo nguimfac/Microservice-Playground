@@ -1,4 +1,4 @@
-package com.playground.inventory_service.model;
+package com.playground.inventory_service.model.audi;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

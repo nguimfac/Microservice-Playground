@@ -1,6 +1,6 @@
-package com.playground.inventory_service.repository;
+package com.playground.inventory_service.dao;
 
-import com.playground.inventory_service.model.Product;
+import com.playground.inventory_service.model.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -3,7 +3,7 @@ package com.playground.inventory_service.mapper;
 import com.playground.dto.request.ProductRequest;
 import com.playground.dto.response.ProductResponse;
 import com.playground.inventory_service.mapper.helper.CategoryHelper;
-import com.playground.inventory_service.model.Product;
+import com.playground.inventory_service.model.product.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
