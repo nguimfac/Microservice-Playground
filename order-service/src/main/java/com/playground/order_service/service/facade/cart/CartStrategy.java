@@ -1,4 +1,4 @@
-package com.playground.order_service;
+package com.playground.order_service.service.facade.cart;
 
 import com.playground.order_service.model.cart.Cart;
 

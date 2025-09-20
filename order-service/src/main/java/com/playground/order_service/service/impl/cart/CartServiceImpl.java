@@ -1,4 +1,4 @@
-package com.playground.order_service.impl.cart;
+package com.playground.order_service.service.impl.cart;
 
 
 import com.playground.constant.CartStatusEnum;
@@ -11,8 +11,10 @@ import com.playground.order_service.dto.response.CartResponse;
 import com.playground.order_service.mapper.CartMapper;
 import com.playground.order_service.model.cart.Cart;
 import com.playground.order_service.dao.CartRepository;
-import com.playground.order_service.service.CartStrategy;
-import com.playground.order_service.service.feign.InventoryClient;
+
+import com.playground.order_service.service.facade.cart.CartService;
+import com.playground.order_service.service.facade.cart.CartStrategy;
+import com.playground.order_service.service.facade.feignClient.InventoryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -22,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CartServiceImpl {
+public class CartServiceImpl  implements CartService {
 
     private final Map<CartStrategyEnum, CartStrategy> strategies = new HashMap<>();
 

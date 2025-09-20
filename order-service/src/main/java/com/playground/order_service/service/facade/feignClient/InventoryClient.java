@@ -1,4 +1,4 @@
-package com.playground.order_service.feign;
+package com.playground.order_service.service.facade.feignClient;
 
 import com.playground.dto.response.InventoryResponse;
 import org.springframework.cloud.openfeign.FeignClient;

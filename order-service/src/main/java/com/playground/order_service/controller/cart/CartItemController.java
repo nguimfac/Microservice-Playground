@@ -4,7 +4,7 @@ package com.playground.order_service.controller.cart;
 import com.playground.dto.request.AddProductRequest;
 import com.playground.order_service.dto.response.ApiResponse;
 import com.playground.order_service.dto.response.CartResponse;
-import com.playground.order_service.service.impl.cart.CartServiceImpl;
+import com.playground.order_service.service.facade.cart.CartService;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/order/cart")
 public class CartItemController {
 
-    private final CartServiceImpl cartServiceImpl;
+    private final CartService cartService;
 
-    public CartItemController(CartServiceImpl cartServiceImpl) {
-        this.cartServiceImpl = cartServiceImpl;
+    public CartItemController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @PostMapping(path = "/{cartId}/add",
@@ -25,7 +25,7 @@ public class CartItemController {
     public ResponseEntity<CartResponse> addProduct(
             @PathVariable long cartId,
             @RequestBody AddProductRequest addProductRequest) {
-        CartResponse response = cartServiceImpl.addProductToCart(cartId,addProductRequest);
+        CartResponse response = cartService.addProductToCart(cartId,addProductRequest);
         return ResponseEntity.ok(response);
     }
 
@@ -33,7 +33,7 @@ public class CartItemController {
     @PostMapping(path = "/{cartId}/add" , produces =  "application/vnd.inventory-service.CartResponse+json")
     @Retry(name = "inventory", fallbackMethod = "retryFallback")
     public ResponseEntity<CartResponse> validateCard(@PathVariable Long cartId) {
-        CartResponse response = cartServiceImpl.validateCart(cartId);
+        CartResponse response = cartService.validateCart(cartId);
         return ResponseEntity.ok(response);
     }
 

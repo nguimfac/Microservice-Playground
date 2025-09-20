@@ -1,4 +1,4 @@
-package com.playground.order_service.impl.order;
+package com.playground.order_service.service.impl.order;
 
 import com.playground.dto.response.InventoryResponse;
 import com.playground.exceptions.NoSuchElementFoundException;

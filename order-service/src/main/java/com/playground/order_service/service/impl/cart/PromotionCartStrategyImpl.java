@@ -1,7 +1,7 @@
-package com.playground.order_service.impl.cart;
+package com.playground.order_service.service.impl.cart;
 
 import com.playground.order_service.model.cart.Cart;
-import com.playground.order_service.service.CartStrategy;
+import com.playground.order_service.service.facade.cart.CartStrategy;
 import org.springframework.stereotype.Component;
 
 @Component
