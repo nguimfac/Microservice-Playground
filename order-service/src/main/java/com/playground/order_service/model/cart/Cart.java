@@ -30,6 +30,11 @@ public class Cart extends Auditable {
        this.cartStatusEnum = CartStatusEnum.INIT;
     }
 
+    public Cart(ArrayList<CartItem> cartItems, CartStatusEnum cartStatusEnum) {
+        this.cartItems = cartItems;
+        this.cartStatusEnum = cartStatusEnum;
+    }
+
     public void addProductToCart(long  productId, int quantity) {
         cartItems.stream()
                 .filter(item -> item.getProductId() == productId)

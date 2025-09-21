@@ -22,15 +22,17 @@ public class Product extends Auditable {
     private String productCode;
     private int quantity;
     private BigDecimal price;
+    private String productName;
     @ManyToOne
     private Category category;
 
 
 
-    public Product(String productCode, Integer quantity, BigDecimal price) {
+    public Product(String productCode, Integer quantity, BigDecimal price,String productName) {
         this.productCode = productCode;
         this.quantity = quantity;
         this.price    = price;
+        this.productName = productName;
     }
 
 }

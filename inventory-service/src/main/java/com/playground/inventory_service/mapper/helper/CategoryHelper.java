@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-@RequiredArgsConstructor
 public class CategoryHelper {
 
     private final CategoryService categoryService;
+
+    public CategoryHelper(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     public Category map(Long categoryId) {
        return Objects.isNull(categoryId) ?  null :  categoryService.findCategoryById(categoryId);

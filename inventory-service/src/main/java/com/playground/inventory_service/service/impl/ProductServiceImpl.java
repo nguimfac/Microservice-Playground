@@ -8,7 +8,6 @@ import com.playground.inventory_service.mapper.ProductMapper;
 import com.playground.inventory_service.model.product.Product;
 import com.playground.inventory_service.dao.ProductRepository;
 import com.playground.inventory_service.service.ProductService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,17 +17,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productMapper = productMapper;
+    }
+
 
     @Override
     public List<InventoryResponse> isInStock(List<String> skuCode) {
-        return productRepository.findByproductCode(skuCode).stream()
+        return productRepository.findByproductCodeIn(skuCode).stream()
                 .map(iv -> new InventoryResponse(iv.getProductCode(), iv.getQuantity() > 0))
                 .toList();
     }

@@ -20,10 +20,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/inventory")
-@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping(produces = "application/vnd.inventory-service.InventoryResponse+json")
     public ResponseEntity<CollectionModel<EntityModel<InventoryResponse>>> isInStock(

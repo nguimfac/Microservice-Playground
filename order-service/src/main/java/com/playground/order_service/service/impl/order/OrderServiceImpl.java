@@ -7,7 +7,7 @@ import com.playground.order_service.dto.request.OrderRequest;
 import com.playground.order_service.model.order.Order;
 import com.playground.order_service.model.order.OrderLineItems;
 import com.playground.order_service.dao.OrderRepository;
-import com.playground.order_service.service.OrderService;
+import com.playground.order_service.service.facade.order.OrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
