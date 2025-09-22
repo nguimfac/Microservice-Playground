@@ -12,6 +12,5 @@ public record AddProductRequest(
         if (strategy == null) {
             strategy = CartStrategyEnum.DEFAULT;
         }
-
     }
 }

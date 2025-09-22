@@ -1,3 +1,4 @@
+
 -- Création base de données pour Order Service
 CREATE DATABASE IF NOT EXISTS order_db;
 CREATE USER IF NOT EXISTS 'order_user'@'%' IDENTIFIED BY 'order_pass';

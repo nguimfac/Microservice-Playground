@@ -2,7 +2,6 @@ package com.playground.order_service.model.cart;
 
 import com.playground.order_service.model.audi.Auditable;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
@@ -19,9 +18,16 @@ public class CartItem extends Auditable {
 
     private int quantity;
 
+    public CartItem() {}
+
     public CartItem(long productId, int quantity) {
         this.productId = productId;
         this.quantity  = quantity;
+    }
+
+    public CartItem(long productId, int quantity,Cart cart){
+        this(productId, quantity);
+        this.cart = cart;
     }
 
     public void increaseQuantity(int quantity) {

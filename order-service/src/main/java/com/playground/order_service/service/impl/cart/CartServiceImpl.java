@@ -7,11 +7,14 @@ import com.playground.dto.request.AddProductRequest;
 import com.playground.dto.response.InventoryResponse;
 import com.playground.exceptions.InvalidDataException;
 import com.playground.exceptions.NoSuchElementFoundException;
+import com.playground.order_service.dto.request.CartRequest;
+import com.playground.order_service.dto.response.CartItemResponse;
 import com.playground.order_service.dto.response.CartResponse;
 import com.playground.order_service.mapper.CartMapper;
 import com.playground.order_service.model.cart.Cart;
 import com.playground.order_service.dao.CartRepository;
 
+import com.playground.order_service.model.cart.CartItem;
 import com.playground.order_service.service.facade.cart.CartService;
 import com.playground.order_service.service.facade.cart.CartStrategy;
 import com.playground.order_service.service.facade.feignClient.InventoryClient;
@@ -36,7 +39,7 @@ public class CartServiceImpl  implements CartService {
 
     private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
 
-    public CartServiceImpl(CartRepository cartRepository, CartMapper cartMapper , InventoryClient inventoryClient){
+    public CartServiceImpl(CartRepository cartRepository, CartMapper cartMapper,  InventoryClient inventoryClient){
         this.cartRepository = cartRepository;
         this.cartMapper = cartMapper;
         this.inventoryClient =  inventoryClient;
@@ -45,6 +48,7 @@ public class CartServiceImpl  implements CartService {
         strategies.put(CartStrategyEnum.BUNDLE,  new BundleCartStrategyImpl());
     }
 
+    @Transactional
     public CartResponse addProductToCart(long cartId,AddProductRequest addProductRequest) {
         log.info("********************** Try to add product to cart ***************");
         CartStrategy strategy = strategies.getOrDefault(addProductRequest.strategy(), new DefaultCartStrategyImpl(cartRepository));
@@ -52,6 +56,24 @@ public class CartServiceImpl  implements CartService {
         return cartMapper.toDto(cart);
     }
 
+    @Override
+    public CartResponse createCart(CartRequest cartRequest) {
+        Cart cart = new Cart(cartRequest.ownerId() , CartStatusEnum.INIT);
+        cartRepository.save(cart);
+        return cartMapper.toDto(cart);
+    }
+
+    @Override
+    public CartResponse findCartById(long cartId) {
+        Cart cart =  cartRepository.findById(cartId).orElseThrow(()->new NoSuchElementFoundException(" No cart found with id "+ cartId));
+        return cartMapper.toDto(cart);
+    }
+
+    @Override
+    public List<CartItemResponse> getCartItemsOfCart(long cartId) {
+        CartResponse cart =  findCartById(cartId);
+        return cart.cartItems();
+    }
 
     @Transactional
     public CartResponse validateCart(long cartId){

@@ -24,7 +24,7 @@ public class ExceptionInterceptor {
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
-    @ExceptionHandler(InvalidDataException.class)
+    @ExceptionHandler(NoSuchElementFoundException.class)
     public final ResponseEntity<ProblemDetail> handleNoSuchElementFoundException(NoSuchElementFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
         problemDetail.setInstance(URI.create("/errors/invalid-data"));

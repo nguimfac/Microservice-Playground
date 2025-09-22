@@ -4,8 +4,8 @@ import com.playground.dto.request.ProductRequest;
 import com.playground.dto.response.InventoryResponse;
 import com.playground.dto.response.ProductResponse;
 import com.playground.inventory_service.service.ProductService;
+import constant.InventoryServiceConstant;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
@@ -28,7 +28,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping(produces = "application/vnd.inventory-service.InventoryResponse+json")
+    @GetMapping(produces = InventoryServiceConstant.inventoryResponseVendorType)
     public ResponseEntity<CollectionModel<EntityModel<InventoryResponse>>> isInStock(
             @RequestParam List<String> skuCodes) {
         List<InventoryResponse> responses = productService.isInStock(skuCodes);
@@ -53,8 +53,8 @@ public class ProductController {
     }
 
     @PostMapping(
-            consumes  = "application/vnd.inventory-service.ProductRequest+json",
-            produces =  "application/vnd.inventory-service.ProductResponse+json"
+            consumes  = InventoryServiceConstant.productRequestVendorType,
+            produces =  InventoryServiceConstant.productResponseVendorType
     )
     public ResponseEntity<EntityModel<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest){
         ProductResponse response = productService.createProduct(productRequest);
@@ -65,7 +65,7 @@ public class ProductController {
         return ResponseEntity.created(linkTo(methodOn(ProductController.class).getProduct(response.id())).toUri()).body(resource);
     }
 
-    @GetMapping(path = "/{id}" ,produces = "application/vnd.inventory-service.ProductResponse+json")
+    @GetMapping(path = "/{id}" ,produces = InventoryServiceConstant.productResponseVendorType)
     public EntityModel<ProductResponse> getProduct(@PathVariable long id) {
         ProductResponse productResponse = productService.getProductById(id);
 
@@ -75,7 +75,7 @@ public class ProductController {
         );
     }
 
-    @GetMapping(produces = "application/vnd.inventory-service.ProductResponse+json")
+    @GetMapping(produces = InventoryServiceConstant.productResponseVendorType)
     public CollectionModel<EntityModel<ProductResponse>> getAllProducts(Pageable pageable) {
         Page<ProductResponse> page = productService.getAllProducts(pageable);
 

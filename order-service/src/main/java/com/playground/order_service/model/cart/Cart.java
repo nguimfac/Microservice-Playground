@@ -30,9 +30,14 @@ public class Cart extends Auditable {
        this.cartStatusEnum = CartStatusEnum.INIT;
     }
 
-    public Cart(ArrayList<CartItem> cartItems, CartStatusEnum cartStatusEnum) {
+    public Cart(List<CartItem> cartItems, CartStatusEnum cartStatusEnum) {
         this.cartItems = cartItems;
         this.cartStatusEnum = cartStatusEnum;
+    }
+
+    public Cart(long ownerId, CartStatusEnum cartStatusEnum) {
+        this.ownerId = ownerId;
+        this.cartStatusEnum  =  cartStatusEnum;
     }
 
     public void addProductToCart(long  productId, int quantity) {
@@ -41,7 +46,7 @@ public class Cart extends Auditable {
                 .findFirst()
                 .ifPresentOrElse(
                         item -> item.increaseQuantity(quantity),
-                        () -> cartItems.add(new CartItem(productId, quantity))
+                        () -> cartItems.add(new CartItem(productId, quantity ,this))
                 );
     }
 

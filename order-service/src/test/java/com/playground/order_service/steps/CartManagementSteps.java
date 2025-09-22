@@ -2,38 +2,39 @@ package com.playground.order_service.steps;
 
 import com.playground.constant.CartStatusEnum;
 import com.playground.dto.response.ProductResponse;
+import com.playground.order_service.constant.OrderServiceConstant;
 import com.playground.order_service.dao.CartItemRepository;
-import com.playground.order_service.dao.CartRepository;
-import com.playground.order_service.model.cart.Cart;
-import com.playground.order_service.model.cart.CartItem;
+import com.playground.order_service.dto.request.CartRequest;
+import com.playground.order_service.dto.response.CartItemResponse;
+import com.playground.order_service.dto.response.CartResponse;
+import com.playground.order_service.service.facade.cart.CartService;
 import com.playground.order_service.service.facade.feignClient.InventoryClient;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
-//un roolback apres chaque test
 public class CartManagementSteps {
 
     @Autowired
-    private CartRepository cartRepository;
+    private CartService cartService;
 
     @Autowired
     private CartItemRepository cartItemRepository;
@@ -41,89 +42,99 @@ public class CartManagementSteps {
     @Autowired
     private InventoryClient inventoryClient;
 
-    @MockitoBean
+    @Autowired
     private MockMvc mockMvc;
 
-    private int lastHttpStatus;
+    private static List<Integer> httpStatus;
 
+    @Given("un panier avec l'id {int} existe et appartient au user d'id {int}")
+    public void unPanierAvecLIdExisteEtAppartientAuUserDId(int cartId, int userId) {
+        CartRequest cartRequest = new CartRequest(cartId ,  userId , null);
+        cartService.createCart(cartRequest);
+        CartResponse cartResponse = cartService.findCartById(cartRequest.id());
+        assertEquals(cartId, cartResponse.id(), "L'ID du panier n'est pas correct");
+        //assertEquals(userId, cartResponse.ownerId(), "Le panier n'appartient pas au bon utilisateur");
+        assertEquals(CartStatusEnum.INIT, cartResponse.cartStatusEnum(), "Le statut du panier doit être INIT");
+    }
 
-    @Given("Given un panier avec l'id {int} existe en base")
-    public void givenUnPanierAvecLIdExisteEnBase(int cartId) {
-        Cart existingCart = cartRepository.findById((long) cartId).orElse(new Cart(new ArrayList<>() ,CartStatusEnum.INIT ));
-        cartRepository.save(existingCart);
-        assertTrue(cartRepository.findById((long) cartId).isPresent());
+    @Given("Les produits suivant existent")
+    public void lesProduitsSuivantExistent(DataTable dataTable) {
+        List<Map<String, String>> products = dataTable.asMaps(String.class, String.class);
+        ProductResponse response;
+        httpStatus = new ArrayList<>();
+        //
+        for (Map<String, String> row : products) {
+            String productCode = row.get("productCode");
+            String productName = row.get("productName");
+            BigDecimal price   = BigDecimal.valueOf(Double.parseDouble(row.get("price")));
+            int quantity       = Integer.parseInt(row.get("quantity"));
+            long productId     = Long.parseLong(row.get("productId"));
+            //
+             response = new ProductResponse(
+                    productId,
+                    productCode,
+                    quantity,
+                    price,
+                    productName
+            );
+            Mockito.when(inventoryClient.getProductById(productId)).thenReturn(response);
+        }
     }
 
 
+    @When("j'ajoute les produits suivants au panier {int}")
+    public void jAjouteLesProduitsSuivantsAuPanier(int cartId, DataTable dataTable) throws Exception {
+        List<Map<String, String>> products = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> row : products) {
+            int productId = Integer.parseInt(row.get("productId"));
+            int quantity = Integer.parseInt(row.get("quantity"));
 
+            String json = "{ \"productId\": " + productId + ", \"quantity\": " + quantity + " }";
 
-    @Given("le produit {int} avec le nom {string} et prix {double} existe")
-    public void leProduitExiste(Integer productId, String productName, Double price) {
-        ProductResponse response = new ProductResponse(
-                productId.longValue(),
-                productName,
-                0, // stock
-                BigDecimal.valueOf(price),
-                productName
-        );
-        Mockito.when(inventoryClient.getProductById(productId.longValue()))
-                .thenReturn(response);
+            int status = mockMvc.perform(
+                            post("/api/order/cart/{cartId}/add" , cartId)
+                                    .contentType(OrderServiceConstant.PRODUCT_REQUEST_VENDOR_TYPE)
+                                    .accept(OrderServiceConstant.CART_RESPONSE_VENDOR_TYPE)
+                                    .content(json)
+                    )
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getStatus();
+
+            httpStatus.add(status);
+        }
+
     }
 
-    @When("j'ajoute le produit {int} au panier {int} avec la quantité {int}")
-    public void ajouterProduitAuPanier(int productId, int cartId, int quantity) throws Exception {
-        String json = "{ \"productId\": " + productId + ", \"quantity\": " + quantity + " }";
-
-        lastHttpStatus = mockMvc.perform(post("/api/order/cart" + cartId + "/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getStatus();
+    @Then("le panier d'id {int} contient {int} ligne\\(s) en base de données")
+    public void lePanierContientLigneSEnBaseDeDonnées(int cartId , int expectedLines) {
+        List<CartItemResponse> cartItems = cartService.getCartItemsOfCart(cartId);
+        assertEquals(expectedLines, cartItems.size(), "Le nombre de lignes dans le panier est incorrect");
     }
 
-    @Then("le produit est ajouté réellement au panier en base")
-    public void leProduitEstAjoutéRéellementAuPanierEnBase() {
-        List<CartItem> items = cartItemRepository.findAll();
-        assertFalse(items.isEmpty(), "Le panier devrait contenir au moins un produit");
-    }
 
-    @And("le panier contient {int} ligne\\(s) en base de données")
-    public void lePanierContientExpectedLinesLigneSEnBaseDeDonnées(int expectedLines) {
-        List<CartItem> items = cartItemRepository.findAll();
-        assertEquals(expectedLines, items.size(), "Le nombre de lignes dans le panier est incorrect");
-    }
-
-    @And("le total du panier en base est {double}")
-    public void verifierTotalPanier(double expectedTotal) {
-        List<CartItem> items = cartItemRepository.findAll();
+    @And("le total du panier d'id {int} en base est {double}")
+    public void leTotalDuPanierDIdEnBaseEst(int cartId, double expectedTotal) {
+        List<CartItemResponse> items = cartService.getCartItemsOfCart(cartId);
         double total = items.stream()
                 .mapToDouble(i -> {
-                    ProductResponse product = inventoryClient.getProductById(i.getProductId());
-                    return product.price().doubleValue() * i.getQuantity();
+                    ProductResponse product = inventoryClient.getProductById(i.id());
+                    return product.price().doubleValue() * i.quantity();
                 })
                 .sum();
         assertEquals(expectedTotal, total, 0.01, "Le total du panier est incorrect");
     }
 
-    @And("la réponse HTTP a le statut {int}")
+    @Then("les réponses HTTP ont le statut {int}")
     public void laRéponseHTTPALeStatut(int status) {
-        assertEquals(status, lastHttpStatus, "Le statut HTTP reçu est incorrect");
+        assertTrue(httpStatus.stream().allMatch(s->s == status));
     }
 
-    @And("le service product externe a été appelé")
+    @Then("le service product externe a été appelé")
     public void leServiceProductExterneAÉtéAppelé() {
         Mockito.verify(inventoryClient, Mockito.atLeastOnce()).getProductById(Mockito.anyLong());
     }
 
-    @And("les informations produit sont récupérées du microservice")
-    public void lesInformationsProduitSontRécupéréesDuMicroservice() {
-        List<CartItem> items = cartItemRepository.findAll();
-        items.forEach(item -> {
-            ProductResponse product = inventoryClient.getProductById(item.getProductId());
-            assertNotNull(product);
-        });
-    }
 
 }
