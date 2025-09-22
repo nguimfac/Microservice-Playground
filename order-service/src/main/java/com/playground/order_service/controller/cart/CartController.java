@@ -14,11 +14,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/order/cart")
-public class CartItemController {
+public class CartController {
 
     private final CartService cartService;
 
-    public CartItemController(CartService cartService) {
+    public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 

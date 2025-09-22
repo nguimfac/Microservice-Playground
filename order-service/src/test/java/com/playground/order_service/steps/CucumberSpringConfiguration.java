@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 @CucumberContextConfiguration
 @SpringBootTest()
 @ActiveProfiles("test")
-public class CucumberSpringConfiguration {
+class CucumberSpringConfiguration {
 
     @Test
     void contextLoads() {

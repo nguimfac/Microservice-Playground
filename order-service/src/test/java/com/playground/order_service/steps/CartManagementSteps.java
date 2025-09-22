@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -46,7 +45,6 @@ public class CartManagementSteps {
     private MockMvc mockMvc;
 
     private int lastHttpStatus;
-
 
 
     @Given("Given un panier avec l'id {int} existe en base")
