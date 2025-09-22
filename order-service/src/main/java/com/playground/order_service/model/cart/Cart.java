@@ -22,7 +22,7 @@ public class Cart extends Auditable {
     @Enumerated(EnumType.STRING)
     CartStatusEnum cartStatusEnum;
 
-    @OneToMany(mappedBy = "cart" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart" , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
 
