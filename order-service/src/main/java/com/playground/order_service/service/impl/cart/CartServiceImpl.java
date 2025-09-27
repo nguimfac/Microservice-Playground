@@ -48,7 +48,6 @@ public class CartServiceImpl  implements CartService {
         strategies.put(CartStrategyEnum.BUNDLE,  new BundleCartStrategyImpl());
     }
 
-    @Transactional
     public CartResponse addProductToCart(long cartId,AddProductRequest addProductRequest) {
         log.info("Try to add product to cart id {}", cartId);
         CartStrategy strategy = strategies.getOrDefault(addProductRequest.strategy(), new DefaultCartStrategyImpl(cartRepository));
@@ -57,7 +56,7 @@ public class CartServiceImpl  implements CartService {
     }
 
     @Override
-    public CartResponse createCart(CartRequest cartRequest) {        log.info("Try to add product to cart");
+    public CartResponse createCart(CartRequest cartRequest) {
         log.info("Try to create cart ");
         Cart cart = new Cart(cartRequest.ownerId() , CartStatusEnum.INIT);
         cartRepository.save(cart);
