@@ -1,9 +1,10 @@
 package com.playground.inventory_service.mapper;
 
-import com.playground.dto.request.ProductRequest;
-import com.playground.dto.response.ProductResponse;
+
+import com.playground.inventory_service.api.model.ProductRequest;
+import com.playground.inventory_service.api.model.ProductResponse;
 import com.playground.inventory_service.mapper.helper.CategoryHelper;
-import com.playground.inventory_service.model.product.Product;
+import com.playground.inventory_service.entities.product.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

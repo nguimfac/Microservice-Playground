@@ -1,7 +1,7 @@
-package com.playground.inventory_service.model.product;
+package com.playground.inventory_service.entities.product;
 
-import com.playground.inventory_service.model.audi.Auditable;
-import com.playground.inventory_service.model.category.Category;
+import com.playground.inventory_service.entities.audi.Auditable;
+import com.playground.inventory_service.entities.category.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

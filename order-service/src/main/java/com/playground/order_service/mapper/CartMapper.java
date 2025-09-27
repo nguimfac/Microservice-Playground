@@ -1,7 +1,7 @@
 package com.playground.order_service.mapper;
 
 import com.playground.order_service.dto.response.CartResponse;
-import com.playground.order_service.model.cart.Cart;
+import com.playground.order_service.entities.cart.Cart;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring" , uses = CartItemMapper.class)

@@ -1,7 +1,6 @@
 package com.playground.order_service.exception;
 
 import com.playground.exceptions.ExceptionResponse;
-import com.playground.exceptions.InvalidDataException;
 import com.playground.exceptions.NoSuchElementFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

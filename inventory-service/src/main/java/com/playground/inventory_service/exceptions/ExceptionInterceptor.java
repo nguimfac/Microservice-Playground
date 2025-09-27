@@ -24,7 +24,6 @@ public class ExceptionInterceptor {
         return new ResponseEntity<>(problemDetail , HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<ProblemDetail> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult()

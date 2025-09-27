@@ -40,4 +40,9 @@ eureka:
     fetch-registry: true
 
 
-#Enable problem Details
+#Swagger
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

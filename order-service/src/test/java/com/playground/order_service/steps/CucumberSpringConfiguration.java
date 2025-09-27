@@ -2,7 +2,6 @@ package com.playground.order_service.steps;
 
 import com.playground.order_service.service.facade.feignClient.InventoryClient;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @CucumberContextConfiguration
 @SpringBootTest()
 @ActiveProfiles("test")
-@AutoConfigureMockMvc  // 🔹 indispensable pour MockMvc
+@AutoConfigureMockMvc 
 class CucumberSpringConfiguration {
 
     @MockitoBean

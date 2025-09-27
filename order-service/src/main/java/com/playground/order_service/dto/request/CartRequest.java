@@ -1,6 +1,6 @@
 package com.playground.order_service.dto.request;
 
-import com.playground.order_service.model.cart.CartItem;
+import com.playground.order_service.entities.cart.CartItem;
 
 import java.util.List;
 

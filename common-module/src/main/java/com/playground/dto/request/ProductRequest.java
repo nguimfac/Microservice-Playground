@@ -19,6 +19,10 @@ public record ProductRequest(
         @DecimalMin(value = "0.0", inclusive = false, message = "price must be greater than 0")
         BigDecimal price ,
 
+        @NotNull(message = "productName can't be null")
+        @NotEmpty(message = "productName can't be empty")
+        String productName,
+
         @Min(value = 1, message = "categoryId must be atlist 1")
         long categoryId) {
 

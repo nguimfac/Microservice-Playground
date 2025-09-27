@@ -1,11 +1,10 @@
 package com.playground.inventory_service.service.impl;
 
-import com.playground.dto.request.ProductRequest;
-import com.playground.dto.response.InventoryResponse;
-import com.playground.dto.response.ProductResponse;
 import com.playground.exceptions.NoSuchElementFoundException;
+import com.playground.inventory_service.api.model.ProductRequest;
+import com.playground.inventory_service.api.model.ProductResponse;
 import com.playground.inventory_service.mapper.ProductMapper;
-import com.playground.inventory_service.model.product.Product;
+import com.playground.inventory_service.entities.product.Product;
 import com.playground.inventory_service.dao.ProductRepository;
 import com.playground.inventory_service.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -28,13 +26,6 @@ public class ProductServiceImpl implements ProductService {
         this.productMapper = productMapper;
     }
 
-
-    @Override
-    public List<InventoryResponse> isInStock(List<String> skuCode) {
-        return productRepository.findByproductCodeIn(skuCode).stream()
-                .map(iv -> new InventoryResponse(iv.getProductCode(), iv.getQuantity() > 0))
-                .toList();
-    }
 
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {

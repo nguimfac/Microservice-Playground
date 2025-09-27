@@ -18,11 +18,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import lombok.extern.slf4j.Slf4j;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@Transactional
 public class CartManagementSteps {
 
     @Autowired
@@ -53,7 +50,6 @@ public class CartManagementSteps {
         cartService.createCart(cartRequest);
         CartResponse cartResponse = cartService.findCartById(cartRequest.id());
         assertEquals(cartId, cartResponse.id(), "L'ID du panier n'est pas correct");
-        //assertEquals(userId, cartResponse.ownerId(), "Le panier n'appartient pas au bon utilisateur");
         assertEquals(CartStatusEnum.INIT, cartResponse.cartStatusEnum(), "Le statut du panier doit être INIT");
     }
 
@@ -96,8 +92,7 @@ public class CartManagementSteps {
                                     .contentType(OrderServiceConstant.PRODUCT_REQUEST_VENDOR_TYPE)
                                     .accept(OrderServiceConstant.CART_RESPONSE_VENDOR_TYPE)
                                     .content(json)
-                    )
-                    .andExpect(status().isOk())
+                    ).andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
                     .getStatus();
@@ -113,7 +108,6 @@ public class CartManagementSteps {
         assertEquals(expectedLines, cartItems.size(), "Le nombre de lignes dans le panier est incorrect");
     }
 
-
     @And("le total du panier d'id {int} en base est {double}")
     public void leTotalDuPanierDIdEnBaseEst(int cartId, double expectedTotal) {
         List<CartItemResponse> items = cartService.getCartItemsOfCart(cartId);
@@ -126,10 +120,12 @@ public class CartManagementSteps {
         assertEquals(expectedTotal, total, 0.01, "Le total du panier est incorrect");
     }
 
+
     @Then("les réponses HTTP ont le statut {int}")
     public void laRéponseHTTPALeStatut(int status) {
         assertTrue(httpStatus.stream().allMatch(s->s == status));
     }
+
 
     @Then("le service product externe a été appelé")
     public void leServiceProductExterneAÉtéAppelé() {

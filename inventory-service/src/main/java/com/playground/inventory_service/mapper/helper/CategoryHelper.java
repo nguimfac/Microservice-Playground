@@ -1,6 +1,6 @@
 package com.playground.inventory_service.mapper.helper;
 
-import com.playground.inventory_service.model.category.Category;
+import com.playground.inventory_service.entities.category.Category;
 import com.playground.inventory_service.service.CategoryService;
 import org.springframework.stereotype.Component;
 

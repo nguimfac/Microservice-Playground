@@ -1,26 +1,20 @@
 package com.playground.inventory_service.controller;
 
-import com.playground.dto.request.ProductRequest;
-import com.playground.dto.response.InventoryResponse;
-import com.playground.dto.response.ProductResponse;
+import com.playground.inventory_service.api.ProductApi;
+import com.playground.inventory_service.api.model.ProductRequest;
+import com.playground.inventory_service.api.model.ProductResponse;
 import com.playground.inventory_service.service.ProductService;
-import constant.InventoryServiceConstant;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping("/api/inventory")
-public class ProductController {
+public class ProductController  implements ProductApi{
 
     private final ProductService productService;
 
@@ -28,76 +22,24 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping(produces = InventoryServiceConstant.inventoryResponseVendorType)
-    public ResponseEntity<CollectionModel<EntityModel<InventoryResponse>>> isInStock(
-            @RequestParam List<String> skuCodes) {
-        List<InventoryResponse> responses = productService.isInStock(skuCodes);
-
-        List<EntityModel<InventoryResponse>> models = responses.stream()
-                .map(resp -> EntityModel.of(
-                        resp,
-                        linkTo(methodOn(ProductController.class)
-                                .isInStock(List.of(resp.skuCode())))
-                                .withSelfRel()
-                ))
-                .toList();
-
-        CollectionModel<EntityModel<InventoryResponse>> collectionModel =
-                CollectionModel.of(models,
-                        linkTo(methodOn(ProductController.class)
-                                .isInStock(skuCodes))
-                                .withRel("check-stock"));
-
-        return ResponseEntity.ok(collectionModel);
-
+    @Override
+    public ResponseEntity<ProductResponse> createProduct(ProductRequest productRequest) {
+       ProductResponse response = productService.createProduct(productRequest);
+       return new ResponseEntity<>(response , HttpStatus.CREATED);
     }
 
-    @PostMapping(
-            consumes  = InventoryServiceConstant.productRequestVendorType,
-            produces =  InventoryServiceConstant.productResponseVendorType
-    )
-    public ResponseEntity<EntityModel<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest){
-        ProductResponse response = productService.createProduct(productRequest);
-        EntityModel<ProductResponse> resource = EntityModel.of(response,
-                linkTo(methodOn(ProductController.class).getProduct(response.id())).withSelfRel(),
-                linkTo(methodOn(ProductController.class).getAllProducts(Pageable.unpaged())).withRel("all-products")
-        );
-        return ResponseEntity.created(linkTo(methodOn(ProductController.class).getProduct(response.id())).toUri()).body(resource);
+    @Override
+    public ResponseEntity<List<ProductResponse>> getAllProducts(Integer page, Integer size) {
+        Page<ProductResponse> pages = productService.getAllProducts(PageRequest.of(page, page));
+        return new ResponseEntity<>(pages.getContent() , HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}" ,produces = InventoryServiceConstant.productResponseVendorType)
-    public EntityModel<ProductResponse> getProduct(@PathVariable long id) {
+    @Override
+    public ResponseEntity<ProductResponse> getProduct(Integer id) {
         ProductResponse productResponse = productService.getProductById(id);
-
-        return EntityModel.of(productResponse,
-                linkTo(methodOn(ProductController.class).getProduct(id)).withSelfRel(),
-                linkTo(methodOn(ProductController.class).getAllProducts(Pageable.unpaged())).withRel("all-products")
-        );
+        return new ResponseEntity<>(productResponse , HttpStatus.OK);
     }
 
-    @GetMapping(produces = InventoryServiceConstant.productResponseVendorType)
-    public CollectionModel<EntityModel<ProductResponse>> getAllProducts(Pageable pageable) {
-        Page<ProductResponse> page = productService.getAllProducts(pageable);
-
-        List<EntityModel<ProductResponse>> productResources = page.stream()
-                .map(p -> EntityModel.of(p,
-                        linkTo(methodOn(ProductController.class).getProduct(p.id())).withSelfRel()))
-                .toList();
-
-        CollectionModel<EntityModel<ProductResponse>> collection = CollectionModel.of(productResources,
-                linkTo(methodOn(ProductController.class).getAllProducts(pageable)).withSelfRel());
-
-        // Liens pagination HATEOAS
-        if (page.hasNext()) {
-            collection.add(linkTo(methodOn(ProductController.class)
-                    .getAllProducts(page.nextOrLastPageable())).withRel("next"));
-        }
-        if (page.hasPrevious()) {
-            collection.add(linkTo(methodOn(ProductController.class)
-                    .getAllProducts(page.previousOrFirstPageable())).withRel("prev"));
-        }
-        return collection;
-    }
 }
 
 

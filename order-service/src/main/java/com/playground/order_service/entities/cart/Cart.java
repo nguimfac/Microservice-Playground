@@ -1,7 +1,7 @@
-package com.playground.order_service.model.cart;
+package com.playground.order_service.entities.cart;
 
 import com.playground.constant.CartStatusEnum;
-import com.playground.order_service.model.audi.Auditable;
+import com.playground.order_service.entities.audi.Auditable;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
