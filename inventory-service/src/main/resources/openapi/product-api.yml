@@ -1,0 +1,132 @@
+openapi: 3.0.1
+info:
+  title:  API des gestions des inventaires
+  description : API pour gerer les inventaires , produits et categories
+  version: 1.0-SNAPSHOT
+
+tags:
+  - name: product
+    description: Opérations sur les produits
+  - name: Category
+    description: Opérations sur les categories
+
+
+servers:
+  - url: http://localhost:8080/api/inventory
+
+paths:
+  /:
+    get:
+      tags:
+        - product
+      operationId: getAllProducts
+      summary: retourner tous les produits
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Numéro de la page (commence à 0)
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+          description: Nombre d’éléments par page
+      responses:
+        "200":
+          description: Listes des produits
+          content:
+            application/vnd.inventory-service.ProductRequest+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+
+    post:
+      tags:
+        - product
+      summary: Creer un nouveau produit
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/vnd.inventory-service.ProductRequest+json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+
+      responses:
+        "201":
+          description: Produit cree avec succes
+          content:
+            application/vnd.inventory-service.ProductResponse+json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+
+
+  /{id}:
+    get:
+      tags:
+        - product
+      summary: Obtenir un produit via son id
+      operationId: getProduct
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Produit trouve
+          content:
+            application/vnd.inventory-service.ProductResponse+json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        "404":
+          description: Produit introuvable
+
+components:
+  schemas:
+    ProductRequest:
+      type: object
+      properties:
+        productCode:
+          type: string
+        productName:
+          type: string
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+        categoryId:
+          type: integer
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        productCode:
+          type: string
+        productName:
+          type: string
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+        category:
+          $ref: '#/components/schemas/CategoryResponse'
+
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string

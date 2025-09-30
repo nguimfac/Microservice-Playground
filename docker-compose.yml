@@ -1,0 +1,40 @@
+services:
+  # POSTGRESQL DATABASE SERVICE
+  postgres:
+    image: postgres
+    container_name: microservices-playground-postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: payment-db
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - /docker-entrypoint-initdb.d 
+    networks:
+      - microservices-playground-network
+    restart: unless-stopped
+
+  # MYSQL DATABASE SERVICE
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservices-playground-network
+
+networks:
+  microservices-playground-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mysql_data:
