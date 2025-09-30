@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RoutingConfig {
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -27,7 +28,7 @@ public class RoutingConfig {
 
                 .route("eureka-web", r -> r
                         .path("/eureka/web")
-                        .filters(f -> f.setPath("/"))  // HTML servi depuis /
+                        .filters(f -> f.setPath("/"))
                         .uri("http://localhost:8761")
                 )
                 // Route pour fichiers statiques (CSS, JS, images)

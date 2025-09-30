@@ -2,6 +2,10 @@ spring:
   application:
     name: order-service
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: optional:configserver:http://localhost:8888
+
+inventory:
+  service:
+    url: http://localhost:8080/api/inventory
 
 
