@@ -1,14 +1,10 @@
-# Configuration centralisée pour Payment Service multimodule
-# Point d'entrée unique : payment-web -> payment-api -> payment-db
-
 server:
   port: 9000
 
 spring:
   application:
     name: payment-web
-  
-  # Configuration base de données
+
   datasource:
     url: jdbc:postgresql://localhost:5432/payment-db
     username: root
@@ -23,13 +19,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
-# Configuration logging
 logging:
   level:
     com.playground: DEBUG
     org.hibernate.SQL: DEBUG
 
-# Configuration monitoring
 management:
   endpoints:
     web:
