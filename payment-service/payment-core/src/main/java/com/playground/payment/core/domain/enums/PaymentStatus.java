@@ -7,13 +7,13 @@ public enum PaymentStatus {
     FAILED("Failed"),
     CANCELLED("Cancelled");
 
-    private final String displayName;
+    private final String status;
 
-    PaymentStatus(String displayName) {
-        this.displayName = displayName;
+    PaymentStatus(String status) {
+        this.status = status;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getStatus() {
+        return status;
     }
 }

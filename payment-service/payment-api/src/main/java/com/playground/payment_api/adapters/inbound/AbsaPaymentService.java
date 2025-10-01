@@ -5,60 +5,49 @@ import org.springframework.stereotype.Service;
 import com.playground.payment.core.application.dto.AbsaPaymentRequest;
 import com.playground.payment.core.application.dto.BasePaymentRequest;
 import com.playground.payment.core.application.dto.PaymentResponse;
-import com.playground.payment.core.exceptions.BusinessException;
-import com.playground.payment.core.utils.PaymentUtils;
 import com.playground.payment_api.domain.ports.inbound.PaymentService;
+import com.playground.payment_api.infrastructure.mappers.AbsaPaymentMapper;
+import com.playground.payment_db.infrastructure.persistence.entities.AbsaPaymentEntity;
+import com.playground.payment_db.port.outbound.AbsaPaymentRepository;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
 @Service("absa")
+@RequiredArgsConstructor
 public class AbsaPaymentService implements PaymentService {
+
+    private final AbsaPaymentMapper mapper;
+    private final AbsaPaymentRepository repository;
 
     @Override
     public String authenticate(BasePaymentRequest request) {
-        log.info("Authenticating ABSA payment request");
-        
-        if (!(request instanceof AbsaPaymentRequest)) {
-            throw new BusinessException("Invalid request type for ABSA provider");
-        }
-        
-        AbsaPaymentRequest absaRequest = (AbsaPaymentRequest) request;
-        
-        // Simulate authentication logic
-        if (PaymentUtils.isValidPhoneNumber(absaRequest.getPhoneNumber())) {
-            return "ABSA_AUTH_TOKEN_" + System.currentTimeMillis();
-        }
-        
-        throw new BusinessException("ABSA authentication failed");
+        return "absa-token-sample";
     }
 
     @Override
     public PaymentResponse processPayment(BasePaymentRequest request, String authToken) {
-        log.info("Processing ABSA payment with token: {}", authToken);
-        
-        AbsaPaymentRequest absaRequest = (AbsaPaymentRequest) request;
-        
-        // Simulate payment processing
-        return PaymentResponse.builder()
-                .transactionId("ABSA_TXN_" + System.currentTimeMillis())
-                .status("SUCCESS")
-                .message("ABSA payment processed successfully")
-                .amount(absaRequest.getAmount())
-                .provider("absa")
-                .build();
+        AbsaPaymentRequest absaReq = (AbsaPaymentRequest) request;
+        AbsaPaymentEntity entity = repository.save(mapper.toEntity(absaReq));
+        return new PaymentResponse(
+            entity.getId(),
+            entity.getStatus(),
+            "ABSA payment initiated",
+            "ABSA",
+            null,
+            entity.getCreatedAt()
+        );
     }
 
     @Override
     public PaymentResponse checkPayment(Long paymentId) {
-        log.info("Checking ABSA payment status for ID: {}", paymentId);
-        
-        // Simulate status check
-        return PaymentResponse.builder()
-                .transactionId("ABSA_TXN_" + paymentId)
-                .status("COMPLETED")
-                .message("ABSA payment completed")
-                .provider("absa")
-                .build();
+        AbsaPaymentEntity entity = repository.findById(paymentId);
+        return new PaymentResponse(
+            entity.getId(),
+            entity.getStatus(),
+            "ABSA payment initiated",
+            "ABSA",
+            null,
+            entity.getCreatedAt()
+        );
     }
 }

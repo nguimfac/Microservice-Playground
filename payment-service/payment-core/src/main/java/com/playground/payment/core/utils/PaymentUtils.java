@@ -26,7 +26,7 @@ public final class PaymentUtils {
         if (amount == null) {
             return "0.00";
         }
-        return String.format(Locale.US, "%.2f", amount);  // Force le locale US (point)
+        return String.format(Locale.US, "%.2f", amount);
     }
     
     public static String maskPhoneNumber(String phoneNumber) {
