@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/api/payments/notifications")
 @Validated
 @RequiredArgsConstructor
 public class NotificationController {
