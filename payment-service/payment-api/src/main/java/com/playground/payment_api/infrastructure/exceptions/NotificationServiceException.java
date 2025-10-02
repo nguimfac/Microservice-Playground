@@ -1,4 +1,4 @@
-package com.playground.payment_api.domain.exceptions;
+package com.playground.payment_api.infrastructure.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,11 @@
-package com.playground.payment_api.infrastructure.adapters.outbound;
+package com.playground.payment_api.adapters.outbound;
 
 import com.playground.payment_api.domain.dto.NotificationRequest;
 import com.playground.payment_api.domain.dto.NotificationResponse;
 import com.playground.payment_api.domain.dto.NotificationStatus;
-import com.playground.payment_api.domain.exceptions.NotificationServiceException;
 import com.playground.payment_api.domain.ports.outbound.NotificationService;
+import com.playground.payment_api.infrastructure.exceptions.NotificationServiceException;
+
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,8 +54,12 @@ public class NotificationServiceAdapter implements NotificationService {
             NotificationResponse response = notificationServiceFeignClient.getNotificationById(notificationId);
             return Optional.ofNullable(response);
         } catch (Exception e) {
-            logger.error("Error retrieving notification with ID {}: {}", notificationId, e.getMessage(), e);
-            throw e;
+            logger.error("Failed to retrieve notification with ID: {}. Operation: GET_NOTIFICATION_BY_ID", 
+                        notificationId, e);
+            throw new NotificationServiceException(
+                "Failed to retrieve notification by ID from external service",
+                "GET_NOTIFICATION_BY_ID"
+            );
         }
     }
     
@@ -65,8 +72,12 @@ public class NotificationServiceAdapter implements NotificationService {
         try {
             return notificationServiceFeignClient.getNotificationsByRecipient(recipient);
         } catch (Exception e) {
-            logger.error("Error retrieving notifications for recipient {}: {}", recipient, e.getMessage(), e);
-            throw e;
+            logger.error("Failed to retrieve notifications for recipient: {}. Operation: GET_NOTIFICATIONS_BY_RECIPIENT", 
+                        recipient, e);
+            throw new NotificationServiceException(
+                "Failed to retrieve notifications by recipient from external service",
+                "GET_NOTIFICATIONS_BY_RECIPIENT"
+            );
         }
     }
     
@@ -79,8 +90,11 @@ public class NotificationServiceAdapter implements NotificationService {
         try {
             return notificationServiceFeignClient.getAllNotifications();
         } catch (Exception e) {
-            logger.error("Error retrieving all notifications: {}", e.getMessage(), e);
-            throw e;
+            logger.error("Failed to retrieve all notifications. Operation: GET_ALL_NOTIFICATIONS", e);
+            throw new NotificationServiceException(
+                "Failed to retrieve all notifications from external service",
+                "GET_ALL_NOTIFICATIONS"
+            );
         }
     }
     
@@ -94,14 +108,30 @@ public class NotificationServiceAdapter implements NotificationService {
             Boolean result = notificationServiceFeignClient.updateNotificationStatus(notificationId, status.name());
             return result != null && result;
         } catch (Exception e) {
-            logger.error("Error updating notification status for ID {}: {}", notificationId, e.getMessage(), e);
-            throw e;
+            logger.error("Failed to update notification status for ID: {} to status: {}. Operation: UPDATE_NOTIFICATION_STATUS", 
+                        notificationId, status, e);
+            throw new NotificationServiceException(
+                "Failed to update notification status via external service",
+                "UPDATE_NOTIFICATION_STATUS"
+            );
         }
     }
     
     public NotificationResponse createNotificationFallback(NotificationRequest request, Exception ex) {
-        logger.error("Circuit breaker activated: Unable to create notification. Error: {}", ex.getMessage());
-        return new NotificationServiceFallback().createNotification(request);
+        logger.error("Circuit breaker activated: Unable to create notification for recipient: {}. Error: {}", 
+                    request.getRecipient(), ex.getMessage());
+        
+        // Créer une réponse fallback mockée
+        NotificationResponse fallbackResponse = new NotificationResponse();
+        fallbackResponse.setId("fallback-" + System.currentTimeMillis());
+        fallbackResponse.setRecipient(request.getRecipient());
+        fallbackResponse.setSubject(request.getSubject());
+        fallbackResponse.setMessage(request.getMessage());
+        fallbackResponse.setType(request.getType());
+        fallbackResponse.setStatus(NotificationStatus.FAILED);
+        fallbackResponse.setCreatedAt(LocalDateTime.now());
+        
+        return fallbackResponse;
     }
     
     public Optional<NotificationResponse> getNotificationByIdFallback(String id, Exception ex) {
@@ -110,17 +140,19 @@ public class NotificationServiceAdapter implements NotificationService {
     }
     
     public List<NotificationResponse> getNotificationsByRecipientFallback(String recipient, Exception ex) {
-        logger.error("Circuit breaker activated: Unable to get notifications for {}. Error: {}", recipient, ex.getMessage());
-        return new NotificationServiceFallback().getNotificationsByRecipient(recipient);
+        logger.error("Circuit breaker activated: Unable to get notifications for recipient: {}. Error: {}", 
+                    recipient, ex.getMessage());
+        return Collections.emptyList();
     }
     
     public List<NotificationResponse> getAllNotificationsFallback(Exception ex) {
         logger.error("Circuit breaker activated: Unable to get all notifications. Error: {}", ex.getMessage());
-        return new NotificationServiceFallback().getAllNotifications();
+        return Collections.emptyList();
     }
     
     public boolean updateNotificationStatusFallback(String id, NotificationStatus status, Exception ex) {
-        logger.error("Circuit breaker activated: Unable to update notification {} status. Error: {}", id, ex.getMessage());
+        logger.error("Circuit breaker activated: Unable to update notification {} status to {}. Error: {}", 
+                    id, status, ex.getMessage());
         return false;
     }
 }
