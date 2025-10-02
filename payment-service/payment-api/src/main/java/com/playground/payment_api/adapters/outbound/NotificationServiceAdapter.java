@@ -4,6 +4,7 @@ import com.playground.payment_api.domain.dto.NotificationRequest;
 import com.playground.payment_api.domain.dto.NotificationResponse;
 import com.playground.payment_api.domain.dto.NotificationStatus;
 import com.playground.payment_api.domain.ports.outbound.NotificationService;
+import com.playground.payment_api.domain.ports.outbound.NotificationServiceFeignClient;
 import com.playground.payment_api.infrastructure.exceptions.NotificationServiceException;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
